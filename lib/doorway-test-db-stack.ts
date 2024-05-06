@@ -10,8 +10,8 @@ export class DoorwayTestDbStack extends cdk.Stack {
 
     const vpc = new VpcInstance(this, id).create(`${id}-vpc`);
     const db = new RDSDBInstance(this, id, props).create(`${id}-db`, vpc);
-    new cdk.CfnOutput(this,'dbSecret',{value: db.secret?.secretArn != null? db.secret.secretArn:""})
-    new cdk.CfnOutput(this, 'vpcArn', {value: vpc.vpcArn})
+    new cdk.CfnOutput(this,'dbSecret',{value: db.secret?.secretName != null? db.secret.secretName:""})
+    new cdk.CfnOutput(this, 'vpcId', {value: vpc.vpcId})
   }
 
 }
