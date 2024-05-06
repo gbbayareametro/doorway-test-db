@@ -8,7 +8,6 @@ phases:
     commands:
       - npm install aws-cdk -g
       - yarn install
-      - yarn cdk bootstrap
 
   build:
     commands:
