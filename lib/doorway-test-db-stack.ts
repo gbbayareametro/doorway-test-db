@@ -13,9 +13,11 @@ export class DoorwayTestDbStack extends cdk.Stack {
     const db = new RDSDBInstance(this, id, props).create(`${id}-db`, vpc);
     // new cdk.CfnOutput(this, 'vpcId', {value: vpc.vpcId})
     new ssm.StringParameter(this, "/doorway/testdb/vpcId", {
+      parameterName: '/doorway/testdb/vpcId'
       stringValue: vpc.vpcId,
     });
     new ssm.StringParameter(this,'/doorway/testdb/dbSecret',{
+      parameterName: '/doorway/testdb/dbSecret'
       stringValue: db.secret?.secretName != null ? db.secret.secretName: 'UNDEFINED'
     })
   }
