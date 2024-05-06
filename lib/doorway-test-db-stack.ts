@@ -1,7 +1,8 @@
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import { VpcInstance } from './resources/vpc';
-import { RDSDBInstance } from './resources/database';
+import * as cdk from "aws-cdk-lib";
+import { Construct } from "constructs";
+import { VpcInstance } from "./resources/vpc";
+import { RDSDBInstance } from "./resources/database";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class DoorwayTestDbStack extends cdk.Stack {
@@ -10,8 +11,12 @@ export class DoorwayTestDbStack extends cdk.Stack {
 
     const vpc = new VpcInstance(this, id).create(`${id}-vpc`);
     const db = new RDSDBInstance(this, id, props).create(`${id}-db`, vpc);
-    new cdk.CfnOutput(this,'dbSecret',{value: db.secret?.secretName != null? db.secret.secretName:""})
-    new cdk.CfnOutput(this, 'vpcId', {value: vpc.vpcId})
+    // new cdk.CfnOutput(this, 'vpcId', {value: vpc.vpcId})
+    new ssm.StringParameter(this, "/doorway/testdb/vpcId", {
+      stringValue: vpc.vpcId,
+    });
+    new ssm.StringParameter(this,'/doorway/testdb/dbSecret',{
+      stringValue: db.secret?.secretName != null ? db.secret.secretName: 'UNDEFINED'
+    })
   }
-
 }
