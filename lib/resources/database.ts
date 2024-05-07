@@ -20,9 +20,11 @@ export class RDSDBInstance {
       ec2.Port.POSTGRES,
       "Allow PostgresPort",
     );
+    const engine = rds.DatabaseInstanceEngine.postgres({version: rds.PostgresEngineVersion.VER_15_6})
 
     const instance = new rds.DatabaseInstance(this.scope, this.id, {
-      engine: rds.DatabaseInstanceEngine.POSTGRES,
+      engine: engine,
+
       instanceType: ec2.InstanceType.of(
         ec2.InstanceClass.BURSTABLE3,
         ec2.InstanceSize.MICRO,
