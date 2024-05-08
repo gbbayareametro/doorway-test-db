@@ -20,7 +20,17 @@ export class RDSDBInstance {
       ec2.Port.POSTGRES,
       "Allow PostgresPort",
     );
-    const engine = rds.DatabaseInstanceEngine.postgres({version: rds.PostgresEngineVersion.VER_15_6})
+    const engine = rds.DatabaseInstanceEngine.postgres({ version: rds.PostgresEngineVersion.VER_15_6 })
+    const parameterGroup = new rds.ParameterGroup(this.scope, 'LogicalReplicationPG', {
+      engine: engine,
+      parameters: {
+        'rds.logical_replication': '1',
+        'wal_sender_timeout': '0',
+
+
+      }
+
+    })
 
     const instance = new rds.DatabaseInstance(this.scope, this.id, {
       engine: engine,
@@ -35,6 +45,7 @@ export class RDSDBInstance {
         subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
       },
       securityGroups: [sg],
+      parameterGroup: parameterGroup
     });
     return instance;
   }
